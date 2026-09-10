@@ -2,6 +2,7 @@
 
 import logging
 from contextlib import asynccontextmanager
+
 import asyncpg
 
 from ..config import config
@@ -30,7 +31,9 @@ class DatabasePool:
         )
         logger.info(
             "Pool initialized: %s:%d/%s (min=2, max=10)",
-            db.host, db.port, db.database,
+            db.host,
+            db.port,
+            db.database,
         )
 
     async def close(self):

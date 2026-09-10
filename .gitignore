@@ -11,15 +11,15 @@ venv/
 # Fuzzing / property-based testing
 .hypothesis/
 
-# 数据库文件
+# Database files
 *.db
 *.sqlite3
 
-# 测试文件（保留核心，排除临时测试）
+# Temporary test files
 _t*.py
 _test*.py
 
-# 环境配置
+# Environment configuration
 .env
 
 # IDE

@@ -66,8 +66,16 @@ SERVER_PORT=8000
 
 ### 3. Start Server
 
+#### Recommended: Cross-platform launcher (one command)
 ```bash
-python http_mcp_server.py
+# Windows: run.bat or run.py
+# macOS/Linux: run.sh or run.py
+python run.py
+```
+
+#### Advanced: Direct entry point with CLI options
+```bash
+python http_mcp_server.py --port 9000 --db-host 192.168.1.100
 ```
 
 The server starts on `http://0.0.0.0:8000`.
@@ -176,7 +184,10 @@ postgresql-mcp/
 │   │   └── version.py
 │   ├── server.py            # MCP server setup
 │   └── tests/
-├── http_mcp_server.py       # Entry point
+├── run.py                   # Cross-platform launcher (Windows/macOS/Linux)
+├── run.bat                  # Windows wrapper (delegates to run.py)
+├── run.sh                   # macOS/Linux wrapper (delegates to run.py)
+├── http_mcp_server.py       # Direct entry point
 ├── docs/
 │   ├── README.md
 │   └── mcp_config.json      # Sample MCP client config
