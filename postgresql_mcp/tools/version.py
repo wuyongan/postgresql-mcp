@@ -2,9 +2,9 @@
 
 import logging
 
-from ..common.response import error_result, ok_result
-from ..queries.version import version_queries
 from .. import db
+from ..common.response import error_result
+from ..queries.version import version_queries
 
 logger = logging.getLogger(__name__)
 

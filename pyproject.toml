@@ -43,6 +43,19 @@ testpaths = ["postgresql_mcp/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+fail_empty = false
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "PL", "PERF", "RUF"]
+ignore = [
+    "BLE001",  # Blind except Exception allowed for MCP tool error handling
+    "PLC0415",  # Import inside function for runtime dispatch / circular deps
+    "PERF401",  # For loops are fine when readability matters
+    "PLR0915",  # Main launcher has many statements — expected
+]
 
 [tool.coverage.run]
 source = ["postgresql_mcp"]

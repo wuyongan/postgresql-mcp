@@ -2,10 +2,10 @@
 
 import logging
 
-from ..common.response import error_result, ok_result
-from ..common.formatting import rows_to_dicts
-from ..queries.schema import schema_queries
 from .. import db
+from ..common.formatting import rows_to_dicts
+from ..common.response import error_result, ok_result
+from ..queries.schema import schema_queries
 
 logger = logging.getLogger(__name__)
 
@@ -48,23 +48,25 @@ async def list_all_tables() -> str:
             all_tables = []
             # Fetch tables for each schema using the SAME connection
             for schema in schemas:
-                rows = await conn.fetch(
-                    schema_queries["list_all_tables_query"], schema
-                )
+                rows = await conn.fetch(schema_queries["list_all_tables_query"], schema)
                 # Convert to plain dicts inside the connection scope
                 plain_rows = rows_to_dicts(rows)
                 for r in plain_rows:
-                    all_tables.append({
-                        "schema": schema,
-                        "name": r["table_name"],
-                        "approx_count": int(r["approx_count"] or 0),
-                    })
+                    all_tables.append(
+                        {
+                            "schema": schema,
+                            "name": r["table_name"],
+                            "approx_count": int(r["approx_count"] or 0),
+                        }
+                    )
 
-        return ok_result({
-            "schemas": schemas,
-            "tables": all_tables,
-            "total_count": len(all_tables),
-        })
+        return ok_result(
+            {
+                "schemas": schemas,
+                "tables": all_tables,
+                "total_count": len(all_tables),
+            }
+        )
     except Exception as e:
         logger.error("Failed to list all tables: %s", e)
         return error_result(str(e))

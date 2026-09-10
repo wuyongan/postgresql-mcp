@@ -5,17 +5,16 @@ Replaces run.bat and run.sh with a single Python script
 that works on Windows, macOS, and Linux.
 """
 
+import argparse
 import os
-import sys
 import shutil
 import subprocess
-import argparse
+import sys
 from pathlib import Path
 
 
 def get_python() -> str:
     """Find the best python executable for this platform."""
-    # On Windows, use 'python' (shim or venv); on Unix, prefer 'python3'
     candidates = ["python3", "python"] if os.name != "nt" else ["python", "py"]
     for name in candidates:
         path = shutil.which(name)
@@ -36,7 +35,9 @@ def ensure_venv(python: str, venv_path: Path) -> str:
     print("[INFO] Virtual environment not found, creating...")
     result = subprocess.run(
         [python, "-m", "venv", str(venv_path)],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if result.returncode != 0:
         print("[ERROR] Failed to create virtual environment.")
@@ -56,7 +57,9 @@ def install_deps(venv_python: str) -> int:
     # Upgrade pip quietly
     rc = subprocess.run(
         [venv_python, "-m", "pip", "install", "--upgrade", "pip", "-q"],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if rc.returncode != 0:
         print("[WARN] Failed to upgrade pip (non-fatal)")
@@ -64,7 +67,9 @@ def install_deps(venv_python: str) -> int:
     # Install requirements
     rc = subprocess.run(
         [venv_python, "-m", "pip", "install", "-r", "requirements.txt", "-q"],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     if rc.returncode != 0:
         print("[ERROR] Failed to install dependencies.")
@@ -101,9 +106,7 @@ LOG_LEVEL=INFO
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="PostgreSQL MCP Server - Cross-platform launcher"
-    )
+    parser = argparse.ArgumentParser(description="PostgreSQL MCP Server - Cross-platform launcher")
     parser.add_argument("--host", type=str, default=None, help="Bind host")
     parser.add_argument("--port", type=int, default=None, help="Listen port")
     parser.add_argument("--db-host", type=str, default=None, help="PostgreSQL host")
@@ -125,7 +128,6 @@ def main():
     # Find python
     python = get_python()
     print(f"[OK] Python found: {python}")
-    subprocess.run([python, "--version"], check=True)
     print()
 
     # Ensure venv
@@ -144,17 +146,11 @@ def main():
     print("========================================")
     print()
 
-    print("Server URL: http://127.0.0.1:8000/mcp")
-    print("Health check: http://127.0.0.1:8000/")
-    print()
-    print("Press Ctrl+C to stop the server.")
-    print()
-
-        # Determine the effective server URL
+    # Determine the effective server URL
     effective_host = args.host or "127.0.0.1"
     effective_port = args.port or 8000
-    print("Server URL: http://%s:%d/mcp" % (effective_host, effective_port))
-    print("Health check: http://%s:%d/" % (effective_host, effective_port))
+    print(f"Server URL: http://{effective_host}:{effective_port}/mcp")
+    print(f"Health check: http://{effective_host}:{effective_port}/")
     print()
     print("Press Ctrl+C to stop the server.")
     print()
@@ -183,10 +179,11 @@ def main():
 
     try:
         os.execv(venv_python, cmd)
-    except Exception as e:
+    except Exception:
         # Fallback: execv may fail on some platforms
         import subprocess as _sub
-        _sub.run(cmd)
+
+        _sub.run(cmd, check=False)
 
 
 if __name__ == "__main__":

@@ -21,9 +21,7 @@ def error_result(message: str, log: bool = True) -> str:
     """
     if log:
         logger.error("Error: %s", message)
-    return json.dumps(
-        {"status": "error", "message": message}, ensure_ascii=False
-    )
+    return json.dumps({"status": "error", "message": message}, ensure_ascii=False)
 
 
 def error_result_traceback(message: str, log: bool = True) -> str:
@@ -40,9 +38,7 @@ def error_result_traceback(message: str, log: bool = True) -> str:
     """
     if log:
         logger.exception("Error: %s", message)
-    return json.dumps(
-        {"status": "error", "message": message}, ensure_ascii=False
-    )
+    return json.dumps({"status": "error", "message": message}, ensure_ascii=False)
 
 
 def ok_result(data: dict, *, truncate: bool = True) -> str:

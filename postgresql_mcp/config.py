@@ -1,13 +1,13 @@
 """Configuration management for PostgreSQL MCP Server"""
 
 import os
-from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Optional
+from pathlib import Path
 
 # Load .env file immediately when module is imported
 try:
     from dotenv import load_dotenv
+
     # Find .env file in current directory or parent directories
     dotenv_path = Path(__file__).parent.parent / ".env"
     if dotenv_path.exists():
@@ -20,14 +20,15 @@ except ImportError:
 @dataclass
 class DatabaseConfig:
     """Database connection configuration"""
+
     host: str = "127.0.0.1"
     port: int = 5432
     database: str = "postgres"
     user: str = "postgres"
     password: str = ""
-    
+
     @classmethod
-    def from_env(cls) -> 'DatabaseConfig':
+    def from_env(cls) -> "DatabaseConfig":
         """Create config from environment variables"""
         return cls(
             host=os.getenv("PG_HOST", "127.0.0.1"),
@@ -36,7 +37,7 @@ class DatabaseConfig:
             user=os.getenv("PG_USER", "postgres"),
             password=os.getenv("PG_PASSWORD", ""),
         )
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary for asyncpg"""
         return {
@@ -51,15 +52,16 @@ class DatabaseConfig:
 @dataclass
 class ServerConfig:
     """Server configuration"""
+
     port: int = 8000
     host: str = "0.0.0.0"
     log_level: str = "INFO"
     mcp_name: str = "postgresql-mcp"
     max_query_size: int = 100000
     result_limit: int = 1000
-    
+
     @classmethod
-    def from_env(cls) -> 'ServerConfig':
+    def from_env(cls) -> "ServerConfig":
         """Create config from environment variables"""
         return cls(
             port=int(os.getenv("SERVER_PORT", "8000")),
@@ -71,11 +73,12 @@ class ServerConfig:
 @dataclass
 class AppConfig:
     """Complete application configuration"""
+
     database: DatabaseConfig = field(default_factory=DatabaseConfig)
     server: ServerConfig = field(default_factory=ServerConfig)
-    
+
     @classmethod
-    def from_env(cls) -> 'AppConfig':
+    def from_env(cls) -> "AppConfig":
         """Create complete config from environment"""
         return cls(
             database=DatabaseConfig.from_env(),
