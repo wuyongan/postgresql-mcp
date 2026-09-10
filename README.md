@@ -101,6 +101,49 @@ The server exposes 8 tools via the MCP protocol:
 | `get_table_indexes` | Get index information |
 | `get_version` | Get PostgreSQL version |
 
+## Dynamic Tool Loading (Hot-Plug)
+
+The server supports automatic discovery of tool modules from the `tools/` directory.
+When you add a new `.py` file to `tools/`, it is automatically registered at runtime
+without restarting the server.
+
+### Creating a Dynamic Tool
+
+1. Create a `.py` file in the `tools/` directory (e.g., `tools/_example_tool.py`)
+2. Define async functions and add them to a `__tools__` list:
+
+```python
+async def my_tool(param: str) -> str:
+    """Description of my tool.
+
+    Args:
+        param: Description of parameter.
+
+    Returns:
+        JSON string with results.
+    """
+    ...your code...
+
+__tools__ = [
+    (my_tool, "my_tool", "Description of my tool"),
+]
+```
+
+3. Save the file — the server auto-discovers and registers it
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `HOTPLUG_ENABLED` | `true` | Enable/disable dynamic tool loading |
+
+To disable: set `HOTPLUG_ENABLED=false` in `.env`.
+
+### Example
+
+The `tools/_example_tool.py` file demonstrates how to create a dynamic tool.
+It queries the `orders` table and returns weekly sales data.
+
 ### Example Request
 
 ```json
