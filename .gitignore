@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Fuzzing / property-based testing
+.hypothesis/
+
+# 数据库文件
+*.db
+*.sqlite3
+
+# 测试文件（保留核心，排除临时测试）
+_t*.py
+_test*.py
+
+# 环境配置
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
