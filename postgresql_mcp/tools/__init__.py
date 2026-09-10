@@ -20,6 +20,8 @@ _tool_loader = None
 _file_watcher = None
 
 __all__ = [
+    "_file_watcher",
+    "_tool_loader",
     "db_pool",
     "describe_table",
     "execute_query",
@@ -29,6 +31,4 @@ __all__ = [
     "list_all_tables",
     "list_schemas",
     "list_tables",
-    "_tool_loader",
-    "_file_watcher",
 ]

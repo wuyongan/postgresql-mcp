@@ -55,6 +55,8 @@ ignore = [
     "PLC0415",  # Import inside function for runtime dispatch / circular deps
     "PERF401",  # For loops are fine when readability matters
     "PLR0915",  # Main launcher has many statements — expected
+    "PERF203",  # try/except in loop acceptable for file watcher/loader
+    "F841",     # Unused locals are fine in some refactoring patterns
 ]
 
 [tool.coverage.run]

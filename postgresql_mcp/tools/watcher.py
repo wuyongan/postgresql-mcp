@@ -2,8 +2,8 @@
 
 import asyncio
 import logging
-import time
 import threading
+import time
 from pathlib import Path
 
 logger = logging.getLogger(__name__)

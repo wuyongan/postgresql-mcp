@@ -13,7 +13,6 @@ You can also disable by setting HOTPLUG_ENABLED=false in .env
 """
 
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -32,21 +31,23 @@ async def example_tool(param: str = "") -> str:
     """
     from ..common.response import ok_result
 
-    return ok_result({
-        "status": "ok",
-        "message": "Dynamic tool example: rename file to enable",
-        "example": {
-            "step1": "Rename this file from _example_tool.py to example_tool.py",
-            "step2": "Wait ~2 seconds for auto-discovery",
-            "step3": "Call via MCP: tools/call example_tool",
-        },
-        "data": [
-            {"id": 1, "name": "Test Record 1", "value": 100},
-            {"id": 2, "name": "Test Record 2", "value": 200},
-            {"id": 3, "name": "Test Record 3", "value": 300},
-        ],
-        "count": 3,
-    })
+    return ok_result(
+        {
+            "status": "ok",
+            "message": "Dynamic tool example: rename file to enable",
+            "example": {
+                "step1": "Rename this file from _example_tool.py to example_tool.py",
+                "step2": "Wait ~2 seconds for auto-discovery",
+                "step3": "Call via MCP: tools/call example_tool",
+            },
+            "data": [
+                {"id": 1, "name": "Test Record 1", "value": 100},
+                {"id": 2, "name": "Test Record 2", "value": 200},
+                {"id": 3, "name": "Test Record 3", "value": 300},
+            ],
+            "count": 3,
+        }
+    )
 
 
 # Define the tools exported from this module.

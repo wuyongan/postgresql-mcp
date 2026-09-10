@@ -1,13 +1,9 @@
 """Dynamic tool loader - discovers and registers tool functions from .py files."""
 
 import importlib
-import inspect
-import sys
 import logging
-import os
-import pkgutil
+import sys
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
