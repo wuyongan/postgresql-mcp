@@ -15,6 +15,10 @@ from .version import get_version
 # Global db_pool reference (set by server.py)
 db_pool = None
 
+# Dynamic tool loading (set by server.py)
+_tool_loader = None
+_file_watcher = None
+
 __all__ = [
     "db_pool",
     "describe_table",
@@ -25,4 +29,6 @@ __all__ = [
     "list_all_tables",
     "list_schemas",
     "list_tables",
+    "_tool_loader",
+    "_file_watcher",
 ]

@@ -59,14 +59,17 @@ class ServerConfig:
     mcp_name: str = "postgresql-mcp"
     max_query_size: int = 100000
     result_limit: int = 1000
+    enable_hotplug: bool = True  # Dynamic tool loading from tools/ directory
 
     @classmethod
     def from_env(cls) -> "ServerConfig":
         """Create config from environment variables"""
+        enable = os.getenv("HOTPLUG_ENABLED", "true").lower() in ("true", "1", "yes")
         return cls(
             port=int(os.getenv("SERVER_PORT", "8000")),
             host=os.getenv("SERVER_HOST", "0.0.0.0"),
             log_level=os.getenv("LOG_LEVEL", "INFO"),
+            enable_hotplug=enable,
         )
 
 
