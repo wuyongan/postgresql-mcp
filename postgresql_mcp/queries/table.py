@@ -46,12 +46,6 @@ WHERE n.nspname::text = $1 AND c.relkind = 'r'
 ORDER BY c.relname
 """
 
-# Table OID lookup by schema (for foreign key / constraint work)
-TABLE_OID_BY_SCHEMA = """SELECT c.relname, c.oid FROM pg_class c
-JOIN pg_namespace n ON n.oid = c.relnamespace
-WHERE n.nspname::text = $1 AND c.relkind = 'r'
-"""
-
 table_queries = {
     "columns": COLUMNS_INFO,
     "table_oid": TABLE_OID,
@@ -59,5 +53,4 @@ table_queries = {
     "table_count": TABLE_COUNT,
     "indexes": INDEXES,
     "tables_in_schema": TABLES_IN_SCHEMA,
-    "table_oid_by_schema": TABLE_OID_BY_SCHEMA,
 }

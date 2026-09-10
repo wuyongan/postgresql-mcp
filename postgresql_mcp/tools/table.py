@@ -78,12 +78,10 @@ async def describe_table(
                 table_queries["columns"], target_schema, table_name
             )
 
-            # Step 2: Resolve table OID for PK lookup
-            relrows = await conn.fetch(
-                table_queries["table_oid_by_schema"], target_schema
+            # Step 2: Resolve table OID for PK lookup (direct query, no scan)
+            our_oid = await conn.fetchval(
+                table_queries["table_oid"], target_schema, table_name
             )
-            oid_map = {r["relname"]: r["oid"] for r in relrows}
-            our_oid = oid_map.get(table_name)
 
             # Step 3: Get primary key columns
             pks = []

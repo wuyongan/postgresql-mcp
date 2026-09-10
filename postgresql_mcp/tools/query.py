@@ -4,17 +4,18 @@ import logging
 
 from ..common.response import error_result, ok_result
 from ..common.formatting import rows_to_dicts, truncate_rows
+from ..config import config
 from .. import db
 
 logger = logging.getLogger(__name__)
 
 
-async def execute_query(sql: str, limit: int = 100) -> str:
+async def execute_query(sql: str, limit: int = None) -> str:
     """Execute SQL query, supports SELECT/INSERT/UPDATE/DELETE.
 
     Args:
-        sql: SQL query string (max 100,000 characters).
-        limit: Maximum rows to return (default 100).
+        sql: SQL query string.
+        limit: Maximum rows to return (default: config.result_limit).
 
     Returns:
         JSON string with query results.
@@ -22,8 +23,13 @@ async def execute_query(sql: str, limit: int = 100) -> str:
     if not sql or not sql.strip():
         return error_result("SQL parameter is empty")
 
-    if len(sql) > 100000:
-        return error_result("SQL query too long (max 100,000 characters)")
+    max_size = getattr(config.server, 'max_query_size', 100000)
+    if len(sql) > max_size:
+        return error_result(f"SQL query too long (max {max_size:,} characters)")
+
+    default_limit = getattr(config.server, 'result_limit', 1000)
+    if limit is None:
+        limit = default_limit
 
     try:
         async with db.db_pool.connection() as conn:

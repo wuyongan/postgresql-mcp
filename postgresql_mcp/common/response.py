@@ -20,7 +20,26 @@ def error_result(message: str, log: bool = True) -> str:
         JSON string: {"status": "error", "message": ...}
     """
     if log:
-        logger.exception("Query error")
+        logger.error("Error: %s", message)
+    return json.dumps(
+        {"status": "error", "message": message}, ensure_ascii=False
+    )
+
+
+def error_result_traceback(message: str, log: bool = True) -> str:
+    """Build an error response string with full traceback logging.
+
+    Use sparingly — only for unexpected errors that warrant investigation.
+
+    Args:
+        message: Human-readable error description.
+        log: Whether to log the traceback (default True).
+
+    Returns:
+        JSON string: {"status": "error", "message": ...}
+    """
+    if log:
+        logger.exception("Error: %s", message)
     return json.dumps(
         {"status": "error", "message": message}, ensure_ascii=False
     )

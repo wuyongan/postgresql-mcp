@@ -7,16 +7,7 @@ import argparse
 import socket
 from pathlib import Path
 
-# Load .env file BEFORE importing config
-try:
-    from dotenv import load_dotenv
-    dotenv_path = Path(__file__).parent / ".env"
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path=dotenv_path)
-        print(f"Loaded .env from {dotenv_path}")
-except ImportError:
-    pass  # python-dotenv not installed
-
+# .env is loaded automatically by postgresql_mcp.config on import
 from postgresql_mcp.config import config
 from postgresql_mcp.db import db_pool
 from postgresql_mcp.server import create_mcp_server
@@ -36,7 +27,6 @@ def check_port(host: str, port: int) -> bool:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.bind((host, port))
-        sock.close()
         return True
     except OSError:
         return False

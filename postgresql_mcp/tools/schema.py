@@ -34,6 +34,8 @@ async def list_all_tables() -> str:
     All records are consumed inside the async with block to avoid
     accessing them after the connection returns to the pool.
 
+    Uses a single connection to reduce pool acquire/release overhead.
+
     Returns:
         JSON string with all tables grouped by schema.
     """
@@ -41,14 +43,11 @@ async def list_all_tables() -> str:
         async with db.db_pool.connection() as conn:
             # Fetch schemas first
             schema_rows = await conn.fetch(schema_queries["all_schemas"])
-        schemas = [r["schema_name"] for r in schema_rows]
+            schemas = [r["schema_name"] for r in schema_rows]
 
-        all_tables = []
-        # Fetch tables for each schema
-        # Note: each async with creates a NEW connection from pool
-        # because the loop can be long and we need to be safe
-        for schema in schemas:
-            async with db.db_pool.connection() as conn:
+            all_tables = []
+            # Fetch tables for each schema using the SAME connection
+            for schema in schemas:
                 rows = await conn.fetch(
                     schema_queries["list_all_tables_query"], schema
                 )
