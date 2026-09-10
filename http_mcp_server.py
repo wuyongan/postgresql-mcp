@@ -4,7 +4,7 @@
 import asyncio
 import logging
 import argparse
-import os
+import socket
 from pathlib import Path
 
 # Load .env file BEFORE importing config
@@ -17,8 +17,8 @@ try:
 except ImportError:
     pass  # python-dotenv not installed
 
-from postgresql_mcp.config import config, DatabaseConfig, ServerConfig
-from postgresql_mcp.database import db_pool
+from postgresql_mcp.config import config
+from postgresql_mcp.db import db_pool
 from postgresql_mcp.server import create_mcp_server
 
 logging.basicConfig(
@@ -26,6 +26,22 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger("postgresql-mcp-http")
+
+
+def check_port(host: str, port: int) -> bool:
+    """Check if the target port is available.
+
+    Returns True if the port is free, False otherwise.
+    """
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.bind((host, port))
+        sock.close()
+        return True
+    except OSError:
+        return False
+    finally:
+        sock.close()
 
 
 async def main():
@@ -60,7 +76,13 @@ async def main():
     logger.info("Starting PostgreSQL MCP Server v1.0.0")
     logger.info("DB: %s:%d/%s", config.database.host, config.database.port, config.database.database)
     logger.info("Server: %s:%d", config.server.host, config.server.port)
-    
+
+    # Check if port is available
+    if not check_port(config.server.host, config.server.port):
+        logger.error("Port %d is already in use! Use --port to specify a different port.", config.server.port)
+        import sys
+        sys.exit(1)
+
     # Initialize database pool
     await db_pool.init()
     
