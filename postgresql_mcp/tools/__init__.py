@@ -1,7 +1,7 @@
 """MCP Tools Package - Base tools for PostgreSQL operations"""
 
 # SQL Execution
-from .query import execute_query
+from .query import execute_query, explain_query
 
 # Schema Management
 from .schema import list_all_tables, list_schemas
@@ -25,6 +25,7 @@ __all__ = [
     "db_pool",
     "describe_table",
     "execute_query",
+    "explain_query",
     "get_table_count",
     "get_table_indexes",
     "get_version",

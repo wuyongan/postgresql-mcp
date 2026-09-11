@@ -88,11 +88,12 @@ curl http://127.0.0.1:8000/
 
 ## MCP Tools
 
-The server exposes 8 tools via the MCP protocol:
+The server exposes 9 tools via the MCP protocol:
 
 | Tool | Description |
 |------|-------------|
 | `execute_query` | Execute SQL (SELECT/INSERT/UPDATE/DELETE) |
+| `explain_query` | Analyze SQL execution plan (EXPLAIN) with performance metrics |
 | `list_schemas` | List database schemas |
 | `list_all_tables` | List all tables across all schemas |
 | `list_tables` | List tables in a specific schema |
