@@ -31,7 +31,10 @@ def create_mcp_server() -> FastMCP:
         instructions="HTTP interface for PostgreSQL MCP Server",
     )
 
-    # Register all 8 base tools with MCP descriptions
+    # Register all 9 base tools with MCP descriptions
+    mcp.add_tool(
+        tools.explain_query, description="Analyze SQL execution plan with EXPLAIN (ANALYZE, VERBOSE, FORMAT JSON)"
+    )
     mcp.add_tool(tools.execute_query, description="Execute SQL queries (SELECT/INSERT/UPDATE/DELETE)")
     mcp.add_tool(tools.list_schemas, description="List all database schemas (excludes system schemas)")
     mcp.add_tool(tools.list_all_tables, description="List all tables across all schemas with approximate counts")
